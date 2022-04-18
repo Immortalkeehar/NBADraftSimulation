@@ -1,0 +1,29 @@
+4
+Houston Rockets
+14.0
+Orlando Magic
+14.0
+Detroit Pistons
+14.0
+Oklahoma City Thunder
+12.5
+Indiana Pacers
+10.5
+Portland Trail Blazers
+9.0
+Sacramento Kings
+7.5
+LA Lakers
+6.0
+San Antonio Spurs
+4.5
+Washington Wizards
+3.0
+New York Knicks
+2.0
+LA Clippers
+1.5
+Charlotte Hornets
+1.0
+Cleveland Cavaliers
+0.5
