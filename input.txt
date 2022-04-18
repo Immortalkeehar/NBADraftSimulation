@@ -1,0 +1,29 @@
+4
+Houston
+14.0
+Orlando
+14.0
+Detroit
+14.0
+Oklahoma City
+12.5
+Indiana
+10.5
+Portland
+9.0
+Sacramento
+7.5
+LA Lakers
+6.0
+San Antonio
+4.5
+Washington
+3.0
+New York
+2.0
+LA Clippers
+1.5
+Charlotte
+1.0
+Cleveland
+0.5
