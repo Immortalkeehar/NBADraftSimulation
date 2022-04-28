@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.PrintWriter;
-public class Mock_NBA_Draft {
+public class Mock_NBA_Draft { // currently works
 	public static void main (String args[] ) throws IOException {	
-		System.out.println("Welcome to a mock NBA Draft!");
+		System.out.println("Welcome to the mock NBA 2022 Draft!");
 		System.out.println();
 		Scanner fileReader = new Scanner(new File("input.txt"));
 		ArrayList<String> Teams = new ArrayList<String>();
@@ -29,7 +29,7 @@ public class Mock_NBA_Draft {
 		ArrayList<ArrayList<String>> teamsTickets = new ArrayList<ArrayList<String>>();
 		teamsTickets = assignTickets(Teams, WinningPercentages, tickets);
 		teamsTickets.remove(teamsTickets.size()-1);
-		printTeamAssignedTicketsToFile(teamsTickets, Teams);
+		printTeamAssignedTicketsToFile(teamsTickets, Teams, tickets, numOfBalls);
 		findWinningTicketAndEndSequence(teamsTickets, Teams, numOfBalls);
 		
 	}
@@ -112,13 +112,39 @@ public class Mock_NBA_Draft {
 		int ticketTracker = 1; // accounts for burnt ticket
 		int ticketGoal = 1;
 		for (int teamCounter = 0; teamCounter < teams.size(); teamCounter++) {
-			ticketGoal += (int)((winningPercentages.get(teamCounter)/100) * (tickets.size()-1));
+			ticketGoal += Math.round((winningPercentages.get(teamCounter)/100) * (tickets.size()-1));
 			while (ticketTracker < ticketGoal) {
 				teamsTickets.get(teamCounter).add(tickets.get(ticketTracker));
 				ticketTracker++;
 			}
 		}
 		return teamsTickets;
+	}
+	public static void findAndPrintPossibleWinners(ArrayList<ArrayList<String>> teamsTickets, ArrayList<String> teams, String winningTicket, int drawnBallCounter) {
+		ArrayList<String> possibleWinners = new ArrayList<String>();
+		ArrayList<Integer> teamIndexes = new ArrayList<Integer>();
+		boolean dupe = false;
+		winningTicket = sortFromLeastToGreatest(winningTicket, drawnBallCounter).trim();
+		for (int teamTracker = 0; teamTracker < teamsTickets.size(); teamTracker++) {
+			for (int ticketTracker = 0; ticketTracker < teamsTickets.get(teamTracker).size(); ticketTracker++) {
+			if (teamsTickets.get(teamTracker).get(ticketTracker).indexOf(winningTicket) > -1) {
+				for (int dupeChecker = 0; dupeChecker < possibleWinners.size(); dupeChecker++) {
+					if (possibleWinners.get(dupeChecker).equals(teams.get(teamTracker))) {
+						dupe = true;
+					}
+				}
+				if (!dupe) {
+					String teamName = teams.get(teamTracker);
+					possibleWinners.add(teamName);
+				}
+				dupe = false;
+			}
+			}
+			
+		}
+		System.out.println("The possible winning teams could be: " + possibleWinners);
+		
+		
 	}
 	public static void findWinningTicketAndEndSequence(ArrayList<ArrayList<String>> teamsTickets, ArrayList<String> teams, int numOfBalls) {
 		Scanner keyboard = new Scanner(System.in);
@@ -128,7 +154,7 @@ public class Mock_NBA_Draft {
 			System.out.println("Round #" + numOfRounds);
 			System.out.println();
 			ArrayList<Integer> ballNums = new ArrayList<Integer>();
-			for (int addBalls = 1; addBalls <= teams.size(); addBalls++) { //DIE
+			for (int addBalls = 1; addBalls <= teams.size(); addBalls++) {
 				ballNums.add(addBalls);
 			}
 			String winningTicket = "";
@@ -144,6 +170,9 @@ public class Mock_NBA_Draft {
 				winningTicket += ballNums.get(drawnBallIndex) + " ";
 				drawnBallCounter++;
 				ballNums.remove(ballNums.get(drawnBallIndex));
+				if (drawnBallCounter < numOfBalls) {
+					findAndPrintPossibleWinners(teamsTickets, teams, winningTicket, drawnBallCounter);
+				}
 			}
 			System.out.println("The winning combination is: " + winningTicket);
 			String winningTeam = findWinningTeam(teamsTickets, teams, winningTicket, numOfBalls);
@@ -153,11 +182,11 @@ public class Mock_NBA_Draft {
 				}
 			}
 			if (isDuplicateWinner) {
-				System.out.println("The winning ticket was assign to " + winningTeam + ", but they have already won so the round will restart");
+				System.out.println("The winning ticket was assigned to " + winningTeam + ", but they have already won so the round will restart");
 				numOfRounds--;
 			}
 			else {
-				System.out.println("The winner of round " + numOfRounds + " is " + winningTeam);
+				System.out.println("The winner of round " + numOfRounds + " is the " + winningTeam);
 				winners.add(winningTeam);
 			}
 			isDuplicateWinner = false;
@@ -194,8 +223,10 @@ public class Mock_NBA_Draft {
 			pickNumber++;
 		}
 	}
-	public static void printTeamAssignedTicketsToFile(ArrayList<ArrayList<String>> teamsTickets, ArrayList<String> teams) throws IOException {
+	public static void printTeamAssignedTicketsToFile(ArrayList<ArrayList<String>> teamsTickets, ArrayList<String> teams, ArrayList<String> tickets, int numOfBalls) throws IOException {
 		PrintWriter toFile = new PrintWriter("TeamsAndAssignedTickets.txt");
+		toFile.println("Burned ticket: " + sortFromLeastToGreatest(tickets.get(0), numOfBalls));
+		toFile.println();
 		for (int teamTracker = 0; teamTracker < teamsTickets.size(); teamTracker++) {
 			toFile.println(teams.get(teamTracker) + ": ");
 			for (int ticketTracker = 0; ticketTracker < teamsTickets.get(teamTracker).size(); ticketTracker++) {
