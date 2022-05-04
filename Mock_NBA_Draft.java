@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.PrintWriter;
-public class Mock_NBA_Draft { // currently works
+// the number of balls, team names, and winning percentages are able to be changed in the input file
+public class Mock_NBA_Draft {
 	public static void main (String args[] ) throws IOException {	
 		System.out.println("Welcome to the mock NBA 2022 Draft!");
 		System.out.println();
